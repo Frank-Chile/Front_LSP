@@ -13,21 +13,11 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      // Realiza la llamada al backend para autenticar al usuario
-      const response = await axios.post('http://localhost:8080/api/clientes/login', {
-        email,
-        clave,
-      });
-
-      if (response.data) {
-        // Guarda el token o los detalles del usuario según la respuesta del backend
-        console.log('Login successful', response.data);
-        navigate('/main')
-      }
-    } catch (error) {
+    if (email === 'perez@usil.pe' && clave === '123456') {
+      console.log('Login successful');
+      navigate('/main');
+    } else {
       setErrorMessage('Email o clave incorrectos');
-      console.error('Error durante el login', error);
     }
   };
 

@@ -9,40 +9,20 @@ const RegistroCliente = () => {
   const [clave, setClave] = useState('');
   const [error, setError] = useState('');
 
-  const navigate = useNavigate();  // Aquí estamos usando useNavigate correctamente
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const nuevoCliente = {
-      email: email,
-      nombre: nombre,
-      telefono: telefono,
-      clave: clave,
-    };
-
-    try {
-      const response = await fetch('http://localhost:8080/api/clientes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nuevoCliente),
-      });
-
-      if (response.ok) {
-        alert('Cliente registrado exitosamente');
-        setEmail('');
-        setNombre('');
-        setTelefono('');
-        setClave('');
-        navigate('/')
-      } else {
-        setError('Error al registrar cliente');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Error de red');
+    if (email && nombre && telefono && clave) {
+      console.log('Registro exitoso:', { email, nombre, telefono, clave });
+      setEmail('');
+      setNombre('');
+      setTelefono('');
+      setClave('');
+      navigate('/');
+    } else {
+      setError('Todos los campos son obligatorios');
     }
   };
 
