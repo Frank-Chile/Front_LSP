@@ -1,0 +1,189 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*background: url('src/assets/PARDOS.jpg') no-repeat center fixed;*/
+  /*background-size: cover; /* Para que la imagen cubra todo el contenedor */
+  /*background-color: rgb(255, 255, 255, 0.5); /* Agrega un color de fondo blanco semitransparente */
+}
+
+.reportes-container {
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco con algo de transparencia */
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+
+.botones-container {
+  display: flex;
+  justify-content: center;/* Centramos los botones */
+  flex-wrap: wrap; /* Permitir que los botones se ajusten en múltiples líneas */
+  gap: 20px; /* Espacio entre los botones */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 48%;
+  padding: 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: 0;
+  background-color: black;
+  letter-spacing: 1.5px;
+  color: white;
+  text-transform: uppercase;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color:  hsl(261deg 80% 48%);
+  box-shadow: 0px 5px 10px rgba(90, 0, 179, 0.3);/*rgb(93 24 220) 0px 7px 29px 0px;*/
+}
+button:active {
+  transform: translateY(10px);
+}
+
+select {
+  padding: 10px;
+  border-radius: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.error-message {
+  color: red;
+}
+
+.reporte {
+  margin-top: 20px;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+}
+
+.reporte pre {
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px; /* Espacio entre los elementos del formulario */
+}
+
+.filter-container select {
+  border-radius: 50px;
+  padding: 8px 16px; /* Añade algo de espacio interno para un mejor aspecto */
+  border: 1px solid #ccc; /* Borde suave */
+  font-size: 14px; /* Tamaño de fuente más pequeño para una apariencia refinada */
+  outline: none; /* Quita el borde de enfoque predeterminado */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Suaviza las transiciones */
+  background-color: black; /* Fondo ligero */
+  color: white; /* Color de texto */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.filter-container select:hover {
+  border-color: #999; /* Cambia el color del borde al pasar el mouse */
+}
+
+.selector-mozo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.selector-mozo-container label {
+  margin-right: 10px;
+}
+
+.date-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Estilos específicos para el botón "Aplicar Filtros" */
+.btn-aplicar-filtros {
+  background-color: #28a745; /* Cambia este color por el que prefieras */
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 10px;
+}
+
+.btn-aplicar-filtros:hover {
+  background-color: #218838; /* Color cuando el mouse está encima */
+}
+
+.btn-aplicar-filtros:active {
+  background-color: #1e7e34; /* Color al hacer clic */
+  transform: translateY(2px); /* Efecto de hundimiento al hacer clic */
+}
+
+.date-filters label {
+  margin-right: 10px;
+  flex-wrap: wrap;
+  margin-left: 15px; /* Espacio entre la etiqueta y el campo */
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.date-filters{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  gap: 10px;
+}
+.date-filters input[type="date"] {
+  padding: 5px 10px; /* Menor padding para hacer el campo más delgado */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  border-radius: 20px; /* Bordes redondeados */
+  border: 1px solid #ccc; /* Borde fino */
+  max-width: 110px; /* Ajusta el ancho máximo */
+}
+
+/* Mejoras en responsive design */
+@media (max-width: 768px) {
+  .botones-container {
+    flex-direction: column;
+  }
+  button {
+    width: 100%;
+  }
+  
+  .date-filters {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+}
+.dashboard{
+  margin-top: 15px;
+}
+
+
+
+

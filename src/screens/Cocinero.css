@@ -1,0 +1,39 @@
+.cocinero-container {
+    margin: 20px;
+  }
+  
+  .ordenes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .orden-card {
+    border: 2px solid blue;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: lightgray;
+  }
+  
+  .orden-info, .orden-detalle, .orden-acciones {
+    margin: 10px 0;
+  }
+  
+  .preparar-btn {
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .descartar-btn {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
