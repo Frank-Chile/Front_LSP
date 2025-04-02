@@ -25,20 +25,46 @@ h2 {
 
 .input-group {
     margin-bottom: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 1em 0 1em 0;
+    max-width: 250px;
+    position: relative;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+.input-group label {
+    font-size: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.8em;
+    margin-left: 0.5em;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    color: rgb(100, 100, 100);
+}
+
+.input-group input {
+    font-size: 100%;
+    padding: 0.8em;
+    outline: none;
+    border: 2px solid rgb(200, 200, 200);
+    border-radius: 20px;
+    background-color: transparent;
+    border-radius: 20px;
+    width: 100%;
     color: #333;
 }
 
-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.input-group :is(input:focus, input:valid)~label {
+    transform: translateY(-50%) scale(.9);
+    margin: 0em;
+    margin-left: 1.3em;
+    padding: 0.4em;
+    background-color: white;
+}
+
+.input-group :is(input:focus, input:valid) {
+    border-color: rgb(150, 150, 200);
 }
 
 .extra-options {
@@ -63,7 +89,7 @@ button {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
 }

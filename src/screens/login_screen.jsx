@@ -26,24 +26,24 @@ const Login = () => {
       <form className="login-form" onSubmit={handleLogin}>
         <h2>Iniciar Sesión</h2>
         <div className="input-group">
-          <label htmlFor="email">Email</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label htmlFor="email">Email</label>
         </div>
         <div className="input-group">
-          <label htmlFor="password">Clave</label>
           <input
             type="password"
             id="password"
             value={clave}
             onChange={(e) => setClave(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label htmlFor="password">Password</label>
         </div>
         <div className="extra-options">
           <label>
@@ -58,12 +58,12 @@ const Login = () => {
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}
         <button type="submit">Ingresar</button>
-        <p>
-          ¿No tienes una cuenta? <a href="/register">Regístrate</a>
-        </p>
-      </form>
-    </div>
+          <p>
+            ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+          </p>
+        </form>
+      </div>
   );
-};
+}
 
 export default Login;
