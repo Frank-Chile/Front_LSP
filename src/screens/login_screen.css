@@ -6,6 +6,8 @@
     background-color: #f0f0f0;
     width: 100vw;
     margin: 0;
+    background: url('src/assets/Bannercurso-senas-interno.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
 .login-form {
@@ -31,23 +33,34 @@ h2 {
     position: relative;
 }
 
-.input-group label {
-    font-size: 100%;
+.input-group i {
     position: absolute;
-    top: 0;
-    left: 0;
-    padding: 0.8em;
-    margin-left: 0.5em;
+    top: 100%;
+    left: 10px; /* Ajusta según el diseño */
+    transform: translateY(-50%);
+    color: rgb(0, 0, 0);
+    font-size: 1.2em;
+    pointer-events: none; /* Evita que el ícono interfiera con el clic */
+}
+.input-group label {
+    position: absolute;
+    font-size: 0.9em;
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    padding: 0;
+    margin: 0;
     pointer-events: none;
     transition: all 0.3s ease;
     color: rgb(100, 100, 100);
+    background-color: transparent;
 }
 
 .input-group input {
     font-size: 100%;
-    padding: 0.8em;
+    padding: 0.8em 0.8em 0.8em 2.5em; /* Ajusta el padding para el ícono */
     outline: none;
-    border: 2px solid rgb(200, 200, 200);
+    border: 2px solid rgb(160, 160, 160);
     border-radius: 20px;
     background-color: transparent;
     border-radius: 20px;
@@ -55,12 +68,27 @@ h2 {
     color: #333;
 }
 
-.input-group :is(input:focus, input:valid)~label {
-    transform: translateY(-50%) scale(.9);
-    margin: 0em;
-    margin-left: 1.3em;
-    padding: 0.4em;
-    background-color: white;
+.input-group i:last-child {
+    position: absolute;
+    right: 10px; /* Ícono del ojito a la derecha */
+    top: 50%;
+    left: 110%;
+    transform: translateY(-50%);
+    color: rgb(0, 0, 0);
+    font-size: 1.2em; 
+    cursor: pointer;
+    pointer-events: auto; /* Permite la interacción con el ícono */
+}
+
+.input-group input:focus~label,
+.input-group input:not(:placeholder-shown)~label {
+    top: -10px; /* Mueve el label hacia arriba */
+    transform: translateY(0); /* Elimina el desplazamiento vertical */
+    font-size: -0.8em; /* Reduce el tamaño del texto */
+    color: rgb(48, 48, 48); /* Cambia el color del label */
+    background-color: white; 
+    padding: 0 0.4em; /* Ajusta el padding */
+    margin-bottom: 20px;
 }
 
 .input-group :is(input:focus, input:valid) {
@@ -69,9 +97,8 @@ h2 {
 
 .extra-options {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    justify-content: end;
+    margin: 15px;   
 }
 
 a {
@@ -88,7 +115,6 @@ button {
     padding: 10px;
     background-color: #007bff;
     color: white;
-    border: none;
     border-radius: 20px;
     cursor: pointer;
     font-size: 16px;
@@ -96,6 +122,11 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+.link {
+    color: #007bff;
+    margin: 10px;
 }
 
 .error {

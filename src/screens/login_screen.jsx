@@ -6,8 +6,8 @@ import './login_screen.css'; // Asegúrate de tener estilos personalizados
 const Login = () => {
   const [email, setEmail] = useState('');
   const [clave, setClave] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -26,40 +26,40 @@ const Login = () => {
       <form className="login-form" onSubmit={handleLogin}>
         <h2>Iniciar Sesión</h2>
         <div className="input-group">
+          <i className="fas fa-envelope"></i>
           <input
             type="email"
             id="email"
+            placeholder=''
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required autoComplete='off'
+            required autoComplete="off"
           />
           <label htmlFor="email">Email</label>
         </div>
         <div className="input-group">
+          <i className="fas fa-lock"></i>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
+            placeholder=''
             value={clave}
             onChange={(e) => setClave(e.target.value)}
-            required autoComplete='off'
+            required autoComplete="off"
           />
           <label htmlFor="password">Password</label>
+          <i 
+            className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} // Cambia el ícono
+            onClick={() => setShowPassword(!showPassword)} // Alterna el estado
+          ></i>
         </div>
         <div className="extra-options">
-          <label>
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-            Recordarme
-          </label>
           <a href="/forgot-password">¿Olvidaste tu clave?</a>
         </div>
         {errorMessage && <p className="error">{errorMessage}</p>}
         <button type="submit">Ingresar</button>
           <p>
-            ¿No tienes una cuenta? <a href="/register">Regístrate</a>
+            ¿No tienes una cuenta? <a className='link' href="/register">Regístrate</a>
           </p>
         </form>
       </div>

@@ -8,6 +8,7 @@ const RegistroCliente = () => {
   const [telefono, setTelefono] = useState('');
   const [clave, setClave] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   
@@ -29,42 +30,58 @@ const RegistroCliente = () => {
   return (
     <div className="register-container">
       <form onSubmit={handleSubmit} className="register-form">
-        <h2>Registro Cliente</h2>
+        <h2>Registro de Usuario</h2>
         <div className="input-group">
+          <i className="fas fa-envelope"></i>
           <input 
-            type="email" 
-            placeholder="Correo Electrónico" 
+            type="email"
+            id="email"
+            placeholder=''
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label>Email</label>
         </div>
         <div className="input-group">
+          <i className='fas fa-user'></i>
           <input 
             type="text" 
-            placeholder="Nombre y Apellidos" 
+            id="nombre"
+            placeholder='' 
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label>Nombre y Apellidos</label>
         </div>
         <div className="input-group">
+          <i className='fas fa-phone'></i>
           <input 
             type="tel" 
-            placeholder="Teléfono" 
+            id="telefono"
+            placeholder=''
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label>Teléfono</label>
         </div>
         <div className="input-group">
+          <i className='fas fa-lock'></i>
           <input 
-            type="password" 
-            placeholder="Clave" 
+            type={showPassword ? 'text' : 'password'}
+            id="clave" 
+            placeholder=''
             value={clave}
             onChange={(e) => setClave(e.target.value)}
-            required
+            required autoComplete='off'
           />
+          <label>Contraseña</label>
+          <i 
+            className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} // Cambia el ícono
+            onClick={() => setShowPassword(!showPassword)} // Alterna el estado
+          ></i>
         </div>
         <button type="submit" className="register-button">Registrarse</button>
         {error && <p className="error-message">{error}</p>}
