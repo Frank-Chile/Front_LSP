@@ -3,10 +3,15 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 from schemas import UserCreate, UserLogin
 from models import User
-from passlib.context import CryptContext
+import bcrypt
 
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
 
 def get_db():
     db = SessionLocal()
@@ -25,7 +30,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
                 detail="El email ya está registrado"
             )
 
-        hashed_password = pwd_context.hash(user.clave)
+        hashed_password = hash_password(user.clave)
         db_user = User(
             email=user.email,
             nombre=user.nombre,
@@ -53,7 +58,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
                 detail="Credenciales incorrectas"
             )
         
-        if not pwd_context.verify(user.clave, db_user.clave):
+        if not verify_password(user.clave, db_user.clave):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciales incorrectas"
