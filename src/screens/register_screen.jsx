@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import './register_screen.css';
+import axios from 'axios';
 
 const RegistroCliente = () => {
   const [email, setEmail] = useState('');
@@ -14,16 +15,48 @@ const RegistroCliente = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Intentando registrar usuario...");
+    try {
+      // Validación de campos
+      if (!email || !nombre || !telefono || !clave) {
+        setError('Todos los campos son requeridos');
+        return;
+      }
 
-    if (email && nombre && telefono && clave) {
-      console.log('Registro exitoso:', { email, nombre, telefono, clave });
-      setEmail('');
-      setNombre('');
-      setTelefono('');
-      setClave('');
-      navigate('/');
-    } else {
-      setError('Todos los campos son obligatorios');
+      console.log("Datos a enviar:", { email, nombre, telefono, clave });
+
+      const response = await axios.post('http://127.0.0.1:8000/register', {
+        email,
+        nombre,
+        telefono,
+        clave,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("Respuesta del servidor:", response.data);
+      
+      if (response.data.mensaje === "Usuario Registrado") {
+        console.log("Registro exitoso, redirigiendo...");
+        navigate('/');
+      }
+    } catch (error) {
+      console.error("Error completo:", error);
+      if (error.response) {
+        // Error de respuesta del servidor
+        console.error("Error del servidor:", error.response.data);
+        setError(error.response.data.detail || 'Error en el registro');
+      } else if (error.request) {
+        // Error de conexión
+        console.error("Error de conexión:", error.request);
+        setError('No se pudo conectar con el servidor');
+      } else {
+        // Otro tipo de error
+        console.error("Error:", error.message);
+        setError('Error al procesar la solicitud');
+      }
     }
   };
 

@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@stomp/stompjs": "^7.0.0",
-    "axios": "^1.7.7",
+    "axios": "^1.8.4",
     "highcharts": "^11.4.8",
     "highcharts-accessibility": "^0.1.7",
     "highcharts-react-official": "^3.2.1",

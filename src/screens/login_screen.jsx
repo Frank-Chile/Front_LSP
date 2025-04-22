@@ -11,15 +11,37 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (email === 'perez@usil.pe' && clave === '123456') {
-      console.log('Login successful');
+const handleLogin = async (e) => {
+  e.preventDefault();
+  console.log("Intentando iniciar sesión...");
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/login', {
+      email,
+      clave,
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    console.log("Respuesta:", response.data);
+    
+    if (response.data.mensaje === "Login exitoso") {
       navigate('/main');
     } else {
-      setErrorMessage('Email o clave incorrectos');
+      setErrorMessage('Credenciales inválidas');
     }
-  };
+  } catch (error) {
+    console.error("Error detallado:", error);
+    if (error.response) {
+      setErrorMessage(error.response.data.detail || 'Error en la autenticación');
+    } else if (error.request) {
+      setErrorMessage('No se pudo conectar con el servidor');
+    } else {
+      setErrorMessage('Error al procesar la solicitud');
+    }
+  }
+};
 
   return (
     <div className="login-container">
