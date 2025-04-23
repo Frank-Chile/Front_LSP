@@ -64,7 +64,32 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
                 detail="Credenciales incorrectas"
             )
             
-        return {"mensaje": "Login exitoso"}
+        return {
+            "mensaje": "Login exitoso",
+            "nombre": db_user.nombre,
+            "email": db_user.email
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+    
+
+@router.post("/user-info")
+def get_user_info(user_email: str, db: Session = Depends(get_db)):
+    try:
+        db_user = db.query(User).filter(User.email == user_email).first()
+        if not db_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Usuario no encontrado"
+            )
+        
+        return {
+            "nombre": db_user.nombre,
+            "email": db_user.email
+        }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

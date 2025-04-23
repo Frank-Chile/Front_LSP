@@ -27,6 +27,8 @@ const handleLogin = async (e) => {
     console.log("Respuesta:", response.data);
     
     if (response.data.mensaje === "Login exitoso") {
+      localStorage.setItem('email', response.data.email);
+      localStorage.setItem('nombre', response.data.nombre);
       navigate('/main');
     } else {
       setErrorMessage('Credenciales inválidas');
