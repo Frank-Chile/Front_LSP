@@ -69,7 +69,6 @@ function MainScreen() {
     };
 
     useEffect(() => {
-      // Verificar si hay datos de usuario al cargar
       const email = localStorage.getItem('email');
       const nombre = localStorage.getItem('nombre');
       

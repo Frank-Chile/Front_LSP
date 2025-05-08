@@ -1,22 +1,88 @@
-.login-container {
+.split-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+}
+
+.left-half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #d1d1e9;
+}
+
+.right-half {
+    flex: 1;
+    background-color: #ffffff; /* Color temporal, se cambiará según lo que necesites */
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    width: 100vw;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center; /* Esto ya lo tienes, es correcto */
+    justify-content: center;
+    /* gap: 1rem; */
+    /* margin-bottom: 1rem; */
+    height: 60px; /* Añade una altura fija para contener ambos elementos */
+}
+
+.brand-logo {
+    width: 50px; /* Aumenté ligeramente el tamaño para mejor proporción */
+    height: 50px; /* Añade altura fija igual al ancho */
+    object-fit: contain;
+    align-self: center; /* Fuerza alineación vertical */
+    margin-bottom: 15px;
+}
+
+/* Ajusta los estilos del título */
+.logo-title h1 {
     margin: 0;
-    background: url('src/assets/Bannercurso-senas-interno.jpg') no-repeat center center fixed;
-    background-size: cover;
+    font-size: 2.5rem; /* Tamaño consistente con tu media query */
+    color: #1f1235;
+    line-height: 1; /* Elimina espacio adicional de línea */
+    display: flex;
+    align-items: center; /* Alinea el texto con el logo */
+    height: 100%; /* Ocupa toda la altura del contenedor */
+}
+
+.branding {
+    font-family: "Times New Roman", Times, serif; 
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.branding h1 {
+    color: #1f1235;
+    font-size: 3rem;
+}
+
+.tagline {
+    color: #555;
+    font-size: 1.2em;
+    font-style: italic;
 }
 
 .login-form {
     padding: 20px;
     border-radius: 8px;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     width: 300px;
     max-width: 100%;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 7rem;
+}
+
+
+
+.login-form:hover {
+    box-shadow: 0 30px 40px rgba(98, 70, 234, 0.25);
 }
 
 h2 {
@@ -36,12 +102,13 @@ h2 {
 .input-group i {
     position: absolute;
     top: 100%;
-    left: 10px; /* Ajusta según el diseño */
+    left: 10px;
     transform: translateY(-50%);
     color: rgb(0, 0, 0);
     font-size: 1.2em;
-    pointer-events: none; /* Evita que el ícono interfiera con el clic */
+    pointer-events: none;
 }
+
 .input-group label {
     position: absolute;
     font-size: 0.9em;
@@ -58,7 +125,7 @@ h2 {
 
 .input-group input {
     font-size: 100%;
-    padding: 0.8em 0.8em 0.8em 2.5em; /* Ajusta el padding para el ícono */
+    padding: 0.8em 0.8em 0.8em 2.5em;
     outline: none;
     border: 2px solid rgb(160, 160, 160);
     border-radius: 20px;
@@ -70,24 +137,24 @@ h2 {
 
 .input-group i:last-child {
     position: absolute;
-    right: 10px; /* Ícono del ojito a la derecha */
+    right: 10px;
     top: 50%;
     left: 110%;
     transform: translateY(-50%);
     color: rgb(0, 0, 0);
     font-size: 1.2em; 
     cursor: pointer;
-    pointer-events: auto; /* Permite la interacción con el ícono */
+    pointer-events: auto;
 }
 
 .input-group input:focus~label,
 .input-group input:not(:placeholder-shown)~label {
-    top: -10px; /* Mueve el label hacia arriba */
-    transform: translateY(0); /* Elimina el desplazamiento vertical */
-    font-size: -0.8em; /* Reduce el tamaño del texto */
-    color: rgb(48, 48, 48); /* Cambia el color del label */
+    top: -10px;
+    transform: translateY(0);
+    font-size: -0.8em;
+    color: rgb(48, 48, 48);
     background-color: white; 
-    padding: 0 0.4em; /* Ajusta el padding */
+    padding: 0 0.4em;
     margin-bottom: 20px;
 }
 
@@ -102,7 +169,7 @@ h2 {
 }
 
 a {
-    color: #007bff;
+    color: #6246ea;
     text-decoration: none;
 }
 
@@ -113,7 +180,7 @@ a:hover {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #6246ea;
     color: white;
     border-radius: 20px;
     cursor: pointer;
@@ -121,11 +188,12 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    transform: translateY(-4px);
+    background-color: #5438d5;
 }
 
 .link {
-    color: #007bff;
+    color: #6246ea;
     margin: 10px;
 }
 
@@ -134,3 +202,106 @@ button:hover {
     margin-top: 10px;
     text-align: center;
 }
+
+/* SECCION DERECHA */
+.right-text {
+    animation: fadeInUp 2s ease-out;
+}
+
+.right-image {
+    animation: fadeIn 2.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.right-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+    z-index: 1;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+.right-text {
+    font-family: 'Poppins', sans-serif;
+}
+/* ------------------- */
+.right-half {
+    flex: 1;
+    background-color: #fffffe; /* Fondo más suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* Para contener efectos */
+}
+
+.right-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.right-image {
+    width: 90%;
+    max-width: 40rem;
+    height: auto;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(98, 70, 234, 0.2);
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 1;
+    /* margin-bottom: 12rem; */
+}
+
+/* Efecto hover para la imagen */
+.right-image:hover {
+    transform: scale(1.03);
+}
+
+/* Efecto de onda decorativo opcional */
+.right-half::before {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -20%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(98,70,234,0.1) 0%, rgba(255,255,255,0) 70%);
+    z-index: 0;
+}
+  
+
+/* Media query para dispositivos móviles */
+@media (max-width: 768px) {
+    .brand-logo {
+      width: 40px;
+    }
+    
+    .logo-title h1 {
+      font-size: 2.5rem;
+    }
+  }
