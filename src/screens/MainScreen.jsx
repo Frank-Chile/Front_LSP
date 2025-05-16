@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MainScreen.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 function MainScreen() {
     
@@ -21,6 +22,8 @@ function MainScreen() {
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
+    const [showAbout, setShowAbout] = useState(false);
+    
 
     const handleVideoUpload = (event) => {
       const file = event.target.files[0];
@@ -93,9 +96,11 @@ function MainScreen() {
       <div className="main-container">
         <nav className="navbar">
           <div className="navbar-brand">
-            <h1>Señalia</h1>
+            <h1>SeñalIA</h1>
           </div>
           <div className="user-info">
+            <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
+            <a className="navbar-link" href="/help_screen">Ayuda</a>
             <span className="user-name">Bienvenido, {userData.nombre}</span>
             <div className="profile-menu-container">
               <button
