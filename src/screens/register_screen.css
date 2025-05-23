@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #d1d1e9;
   width: 100vw;
   margin: 0;
 }
@@ -12,9 +12,15 @@
   padding: 20px;
   border-radius: 8px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   width: 300px;
   max-width: 100%;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.register-form:hover {
+  box-shadow: 0 30px 40px rgba(98, 70, 234, 0.25);
+  transform: translateY(-4px);
 }
 
 h2 {
@@ -97,8 +103,8 @@ h2 {
 .register-button {
   width: 100%;
   padding: 10px;
-  background-color: #0077ff;
-  color: black;
+  background-color: #6246ea;
+  color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -108,7 +114,7 @@ h2 {
 }
 
 .register-button:hover {
-  background-color: #0060c7;
+  background-color: #5438d5;
 }
 
 .error-message {

@@ -100,7 +100,7 @@ function MainScreen() {
           </div>
           <div className="user-info">
             <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
-            <a className="navbar-link" href="/help_screen">Ayuda</a>
+            <Link className="navbar-link" to="/ayuda">Ayuda</Link>
             <span className="user-name">Bienvenido, {userData.nombre}</span>
             <div className="profile-menu-container">
               <button

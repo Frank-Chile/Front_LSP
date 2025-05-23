@@ -5,7 +5,8 @@ import './index.css';
 import LoginScreen from './screens/login_screen.jsx';
 import MainScreen from './screens/MainScreen.jsx';
 import RegisterScreen from './screens/register_screen.jsx';
-import NosotrosScreen from "./screens/nosotros_screen";
+import NosotrosScreen from "./screens/nosotros_screen.jsx";
+import AyudaScreen from "./screens/ayuda_screen.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/main" element={<MainScreen />} />
         <Route path="/register" element={<RegisterScreen />} />
         <Route path="/nosotros" element={<NosotrosScreen />} />
+        <Route path="/ayuda" element={<AyudaScreen />} />
       </Routes>
     </Router>
   </React.StrictMode>
