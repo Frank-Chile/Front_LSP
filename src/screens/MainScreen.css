@@ -7,7 +7,25 @@
     --white: #FFFFFF;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
-  
+/* Navbar */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #222;
+}
+
+
   body {
     margin: 0;
     padding: 0;

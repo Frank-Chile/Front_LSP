@@ -1,28 +1,82 @@
-import React from "react";
+import {useEffect, useState} from "react";
 import "./nosotros_screen.css"; // Import your CSS file here
 import { Link, useNavigate } from "react-router-dom";
+import iconSignal from '../assets/icon-signal.png';
 
 function NosotrosScreen() {
   const navigate = useNavigate();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [userData, setUserData] = useState({ 
+    nombre: '', email: '' 
+  });
+  
+  useEffect(() => {
+    const email = localStorage.getItem('email');
+    const nombre = localStorage.getItem('nombre');
+    
+    if (!email || !nombre) {
+      navigate('/');
+      return;
+    }
+
+    setUserData({
+      email,
+      nombre
+    });
+  }, [navigate]);
+  
+  const handleLogout = () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('nombre');
+    navigate('/');
+  };
   
   return (
     <div className="main-container">
       <nav className="navbar">
-        <div
-          className="navbar-brand"
-          style={{ cursor: "pointer" }}
-          onClick={() => navigate("/main")}
-        >
-          <h1>SeñalIA</h1>
+        <div className="navbar-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/main")}>
+          <img src={iconSignal} alt="Señalia Logo" className="brand-logo" />
+          <span className="brand-title">SEÑALIA</span>
         </div>
         <div className="user-info">
           <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
           <Link className="navbar-link" to="/help">Ayuda</Link>
         </div>
+        <div className="profile-menu-container">
+          <button
+            className="profile-btn"
+            onClick={() => setShowProfileMenu((prev) => !prev)}
+            aria-label="Abrir menú de perfil"
+          >
+            Perfil &#9662;
+          </button>
+          {showProfileMenu && (
+            <div className="profile-dropdown">
+              <div className="profile-dropdown-item">
+                <strong>Datos personales</strong>
+                <div>Nombre: {userData.nombre}</div>
+                <div>Email: {userData.email}</div>
+              </div>
+              <div className="profile-dropdown-item">
+                <button
+                  className="profile-action"
+                  onClick={() => alert("Funcionalidad próximamente")}
+                >
+                  Cambiar contraseña
+                </button>
+              </div>
+              <div className="profile-dropdown-item">
+                <button className="profile-action logout" onClick={handleLogout}>
+                  Cerrar Sesión
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </nav>
 
-      <main className="content">
-        {/* Hero Section */}
+      <div className="content">
+        {/* Hero Section - Fixed */}
         <section className="hero-section">
           <div className="hero-content">
             <div className="hero-badge">
@@ -52,7 +106,7 @@ function NosotrosScreen() {
           </div>
         </section>
 
-        {/* About Content */}
+        {/* About Content - Scrollable */}
         <section className="about-content">
           <div className="content-grid">
             {/* Mission Card */}
@@ -178,7 +232,7 @@ function NosotrosScreen() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
 
       <footer className="footer">
         © SEÑALIA 2025. Todos los derechos reservados.

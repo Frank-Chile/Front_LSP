@@ -1,11 +1,52 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './ayuda_screen.css';
 import { Link, useNavigate } from 'react-router-dom';
+import iconSignal from '../assets/icon-signal.png';
 
 const AyudaScreen = () => {
     const navigate = useNavigate();
     const [activeSection, setActiveSection] = useState('getting-started');
     const [searchTerm, setSearchTerm] = useState('');
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [userData, setUserData] = useState({ nombre: '', email: '' });
+    
+    useEffect(() => {
+        const email = localStorage.getItem('email');
+        const nombre = localStorage.getItem('nombre');
+        
+        if (!email || !nombre) {
+          navigate('/');
+          return;
+        }
+    
+        setUserData({
+          email,
+          nombre
+        });
+    }, [navigate]);
+    
+    const handleLogout = () => {
+      localStorage.removeItem('email');
+      localStorage.removeItem('nombre');
+      navigate('/');
+    };
+
+    // Función para hacer scroll a la sección seleccionada
+    const handleSectionClick = (sectionId) => {
+        setActiveSection(sectionId);
+        setSearchTerm(''); // Limpiar búsqueda al cambiar sección
+        
+        // Hacer scroll a la sección
+        setTimeout(() => {
+            const sectionElement = document.getElementById(`section-${sectionId}`);
+            if (sectionElement) {
+                sectionElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 100);
+    };
 
   const sections = [
     {
@@ -116,16 +157,45 @@ const AyudaScreen = () => {
   return (
         <div className="main-container">
             <nav className="navbar">
-                <div
-                    className="navbar-brand"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate("/main")}
-                >
-                    <h1>SeñalIA</h1>
+                <div className="navbar-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/main")}>
+                          <img src={iconSignal} alt="Señalia Logo" className="brand-logo" />
+                          <span className="brand-title">SEÑALIA</span>
                 </div>
                 <div className="user-info">
                     <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
                     <Link className="navbar-link" to="/ayuda">Ayuda</Link>
+                </div>
+                <span className="user-name">Bienvenido, {userData.nombre}</span>
+                <div className="profile-menu-container">
+                  <button
+                    className="profile-btn"
+                    onClick={() => setShowProfileMenu((prev) => !prev)}
+                    aria-label="Abrir menú de perfil"
+                  >
+                    Perfil &#9662;
+                  </button>
+                  {showProfileMenu && (
+                    <div className="profile-dropdown">
+                      <div className="profile-dropdown-item">
+                        <strong>Datos personales</strong>
+                        <div>Nombre: {userData.nombre}</div>
+                        <div>Email: {userData.email}</div>
+                      </div>
+                      <div className="profile-dropdown-item">
+                        <button
+                          className="profile-action"
+                          onClick={() => alert("Funcionalidad próximamente")}
+                        >
+                          Cambiar contraseña
+                        </button>
+                      </div>
+                      <div className="profile-dropdown-item">
+                        <button className="profile-action logout" onClick={handleLogout}>
+                          Cerrar Sesión
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
             </nav>
             <div className="ayuda-container">
@@ -164,7 +234,7 @@ const AyudaScreen = () => {
                     <li
                         key={section.id}
                         className={`menu-item ${activeSection === section.id ? 'active' : ''}`}
-                        onClick={() => setActiveSection(section.id)}
+                        onClick={() => handleSectionClick(section.id)}
                     >
                         <span className="menu-icon">{section.icon}</span>
                         <span className="menu-text">{section.title}</span>
@@ -184,7 +254,7 @@ const AyudaScreen = () => {
                     filteredSections
                     .filter(section => !searchTerm || section.id === activeSection || searchTerm)
                     .map((section) => (
-                        <section key={section.id} className="help-section">
+                        <section key={section.id} id={`section-${section.id}`} className="help-section">
                         <div className="section-header">
                             <span className="section-icon">{section.icon}</span>
                             <h2 className="section-title">{section.title}</h2>

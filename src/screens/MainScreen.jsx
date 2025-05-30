@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import iconSignal from "../assets/icon-signal.png";
 import "./MainScreen.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -96,7 +97,8 @@ function MainScreen() {
       <div className="main-container">
         <nav className="navbar">
           <div className="navbar-brand">
-            <h1>SeñalIA</h1>
+            <img src={iconSignal} alt="Señalia Logo" className="brand-logo" />
+            <span className="brand-title">SEÑALIA</span>
           </div>
           <div className="user-info">
             <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
