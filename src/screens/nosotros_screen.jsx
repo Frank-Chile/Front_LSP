@@ -5,75 +5,123 @@ import iconSignal from '../assets/icon-signal.png';
 
 function NosotrosScreen() {
   const navigate = useNavigate();
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [userData, setUserData] = useState({ 
-    nombre: '', email: '' 
-  });
-  
-  useEffect(() => {
-    const email = localStorage.getItem('email');
-    const nombre = localStorage.getItem('nombre');
+      const [userData, setUserData] = useState({
+          nombre: '',
+          email: ''
+        });
+      const storedName = localStorage.getItem("nombre");
+      const [userName] = useState(storedName && storedName !== "null" ? storedName : "Sin nombre");
+      const [showProfileMenu, setShowProfileMenu] = useState(false);
+      const [userPlan, setUserPlan] = useState('free'); // Estado para el plan del usuario
     
-    if (!email || !nombre) {
-      navigate('/');
-      return;
-    }
+      
 
-    setUserData({
-      email,
-      nombre
-    });
-  }, [navigate]);
+    useEffect(() => {
+      const email = localStorage.getItem('email');
+      const nombre = localStorage.getItem('nombre');
+      const planType = localStorage.getItem('planType');
+      
+      if (!email || !nombre) {
+        navigate('/');
+        return;
+      }
+
+      // Si no tiene plan, redirigir a pricing
+      if (!planType) {
+        navigate('/pricing');
+        return;
+      }
   
-  const handleLogout = () => {
-    localStorage.removeItem('email');
-    localStorage.removeItem('nombre');
-    navigate('/');
-  };
+      setUserData({
+        email,
+        nombre
+      });
+      setUserPlan(planType);
+    }, [navigate]);
+
+    const getPlanDisplayName = (plan) => {
+      switch(plan) {
+        case 'free': return 'Gratuito';
+        case 'premium': return 'Premium Personal';
+        case 'corporate': return 'Corporativo';
+        default: return 'Gratuito';
+      }
+    };
+
+    const handleUpgradePlan = () => {
+      navigate('/pricing');
+    };
+  
+    const handleLogout = () => {
+      localStorage.clear();
+      navigate('/');
+    };
   
   return (
     <div className="main-container">
       <nav className="navbar">
-        <div className="navbar-brand" style={{ cursor: "pointer" }} onClick={() => navigate("/main")}>
-          <img src={iconSignal} alt="Señalia Logo" className="brand-logo" />
-          <span className="brand-title">SEÑALIA</span>
+        <div className="navbar-brand">
+          <img src={iconSignal} alt="SeñalIA Logo" className="logo" />
+          <span className="brand-name">SEÑALIA</span>
         </div>
+
         <div className="user-info">
+          <span className="user-name">Bienvenido, {userData.nombre}</span>
           <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
-          <Link className="navbar-link" to="/help">Ayuda</Link>
-        </div>
-        <div className="profile-menu-container">
-          <button
-            className="profile-btn"
-            onClick={() => setShowProfileMenu((prev) => !prev)}
-            aria-label="Abrir menú de perfil"
-          >
-            Perfil &#9662;
-          </button>
-          {showProfileMenu && (
-            <div className="profile-dropdown">
-              <div className="profile-dropdown-item">
-                <strong>Datos personales</strong>
-                <div>Nombre: {userData.nombre}</div>
-                <div>Email: {userData.email}</div>
+          <Link className="navbar-link" to="/ayuda">Ayuda</Link>
+
+          <div className="plan-indicador">
+            <span className={`plan-badge ${userPlan}`}>
+              Plan {getPlanDisplayName(userPlan)}
+            </span>
+          </div>
+
+          <div className="profile-menu-container">
+            <button
+              className="profile-btn"
+              onClick={()=> setShowProfileMenu((prev) => !prev)}
+              aria-label="Abrir menu de perfil"
+            >
+              Perfil &#9662;
+            </button>
+
+            {showProfileMenu && (
+              <div className="profile-dropdown">
+                <div className="profile-dropdown-item profile-data">
+                  <strong>Datos Personales</strong>
+                  <div>Nombre: {userData.nombre}</div>
+                  <div>Correo: {userData.email}</div>
+                  <div>Plan: {getPlanDisplayName(userPlan)}</div>
+                </div>
+
+                {userPlan == 'free' && (
+                  <div className="profile-dropdown-item">
+                    <button className="profile-upgrade-btn" onClick={handleUpgradePlan}>
+                      Mejorar Plan
+                    </button>
+                  </div>
+                )}
+
+                <div className="profile-dropdown-item">
+                  <button
+                    className="profile-action"
+                    onClick={() => alert("Funcionalidad próximamente")}
+                  >
+                    Cambiar Contraseña
+                  </button>
+                </div>
+
+                <div className="profile-dropdown-item">
+                  <button className="profile-logout" onClick={handleLogout}>
+                    Cerrar Sesión
+                  </button>
+                </div>
               </div>
-              <div className="profile-dropdown-item">
-                <button
-                  className="profile-action"
-                  onClick={() => alert("Funcionalidad próximamente")}
-                >
-                  Cambiar contraseña
-                </button>
-              </div>
-              <div className="profile-dropdown-item">
-                <button className="profile-action logout" onClick={handleLogout}>
-                  Cerrar Sesión
-                </button>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </nav>
+      
 
       <div className="content">
         {/* Hero Section - Fixed */}

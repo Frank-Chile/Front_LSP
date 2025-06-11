@@ -15,6 +15,17 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+/* Específicamente para el logo dentro de navbar-brand */
+.navbar-brand .brand-logo {
+  margin-top: 0.2rem;
+  margin-right: 0;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -27,16 +38,6 @@
     z-index: 1000;
 }
   
-.navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.brand-logo {
-    height: 40px;
-    width: auto;
-}
 
 .brand-title {
     color: var(--primary-color);
