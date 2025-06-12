@@ -1303,7 +1303,7 @@ function MainScreen() {
                     </div>
                   ) : transcribedText ? (
                     <div>
-                      <p><strong>Resultado:</strong> {transcribedText}</p>
+                      <p>{transcribedText}</p>
                     </div>
                   ) : (
                     <div>
