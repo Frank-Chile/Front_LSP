@@ -750,3 +750,283 @@
   bottom: 0;
   font-weight: bold;
 }
+
+/* ============================================
+   VIDEO PROCESSING STYLES
+   ============================================ */
+
+/* Mejoras para el botón de procesamiento */
+.process-video-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5952d4, var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(108, 99, 255, 0.3);
+}
+
+.process-video-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  background: linear-gradient(135deg, #ccc, #999);
+}
+
+.process-video-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+/* Estilos para palabras disponibles y resultados */
+.available-words-container {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid var(--primary-color);
+}
+
+.word-tag {
+  display: inline-block;
+  background: var(--primary-color);
+  color: white;
+  padding: 3px 8px;
+  margin: 2px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  font-weight: 500;
+}
+
+.recognized-words-list {
+  margin-top: 10px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.recognized-words-list li {
+  background: #e8f5e8;
+  margin: 3px 0;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-left: 3px solid var(--secondary-color);
+  font-size: 0.9em;
+}
+
+.confidence-score {
+  color: #666;
+  font-weight: normal;
+}
+
+/* Animación para el botón de procesamiento */
+@keyframes processing-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.process-video-btn:disabled {
+  animation: processing-pulse 1.5s infinite;
+}
+
+/* ============================================
+   REAL-TIME RECOGNITION STYLES
+   ============================================ */
+
+.realtime-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+
+.realtime-btn:hover {
+  background: linear-gradient(135deg, #218838, #1ea674);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(40, 167, 69, 0.3);
+}
+
+.realtime-btn.active {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.realtime-btn.active:hover {
+  background: linear-gradient(135deg, #c82333, #a71e2a);
+}
+
+.realtime-container {
+  position: relative;
+  width: 100%;
+  min-height: 250px;
+  max-height: 350px;
+  background: #f0f0f0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 2px solid #28a745;
+}
+
+.realtime-video {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  max-height: 350px;
+  display: block;
+  object-fit: cover;
+  background: #000;
+  border-radius: var(--border-radius);
+}
+
+/* Estilos para cuando el video no está funcionando */
+.realtime-video:not([src]) {
+  background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+              linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.realtime-video::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+
+.realtime-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.reset-session-btn {
+  background: rgba(255, 193, 7, 0.9);
+  color: #212529;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.reset-session-btn:hover {
+  background: rgba(255, 193, 7, 1);
+  transform: translateY(-1px);
+}
+
+.test-camera-btn {
+  background: rgba(0, 123, 255, 0.9);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.test-camera-btn:hover {
+  background: rgba(0, 123, 255, 1);
+  transform: translateY(-1px);
+}
+
+.realtime-results {
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: var(--border-radius);
+  margin: 10px 0;
+}
+
+.realtime-results h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.realtime-results h4 {
+  color: var(--dark-color);
+  margin: 15px 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.words-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.word-tag.realtime {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.realtime-sentence {
+  background: white;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+  margin-top: 15px;
+}
+
+.sentence-text {
+  font-size: 1.1rem;
+  color: var(--dark-color);
+  margin: 0;
+  font-weight: 500;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive para tiempo real */
+@media (max-width: 768px) {
+  .realtime-btn {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+  }
+  
+  .realtime-results {
+    padding: 15px;
+  }
+  
+  .realtime-results h3 {
+    font-size: 1.1rem;
+  }
+  
+  .word-tag.realtime {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  
+  .sentence-text {
+    font-size: 1rem;
+  }
+}
