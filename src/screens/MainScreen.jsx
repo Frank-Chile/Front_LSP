@@ -110,24 +110,22 @@ function MainScreen() {
           const { recognized_words } = response.data;
           setRecognizedWords(recognized_words);
           
-          if (recognized_words.length > 0) {
-            // Extraer solo las palabras para mostrar
-            const words = recognized_words.map(w => w.word);
-            
-            // Si hay palabras reconocidas, conectarlas usando IA
-            try {
-              const connectResponse = await axios.post('http://localhost:8000/video/connect-words', words);
-              if (connectResponse.data.success) {
+            if (recognized_words.length > 0) {
+              // Conectar siempre las palabras reconocidas y mostrar la frase generada
+              const words = recognized_words.map(w => w.word);
+              try {
+                const connectResponse = await axios.post(
+                  'http://localhost:8000/video/connect-words',
+                  words
+                );
                 setTranscribedText(connectResponse.data.connected_sentence);
-              } else {
-                setTranscribedText(`Palabras reconocidas: ${words.join(', ')}`);
+                console.log("Palabras", recognizedWords)
+              } catch (connectError) {
+                console.error('Error conectando palabras:', connectError);
+                setTranscribedText('');
               }
-            } catch (connectError) {
-              console.error('Error conectando palabras:', connectError);
-              setTranscribedText(`Palabras reconocidas: ${words.join(', ')}`);
-            }
-          } else {
-            setTranscribedText("No se reconocieron palabras en el video. Asegúrate de que tus manos sean visibles y realices gestos claros.");
+            } else {
+              setTranscribedText("No se reconocieron palabras en el video. Asegúrate de que tus manos sean visibles y realices gestos claros.");
           }
         } else {
           setTranscribedText("Error procesando el video. Inténtalo nuevamente.");
@@ -1306,18 +1304,6 @@ function MainScreen() {
                   ) : transcribedText ? (
                     <div>
                       <p><strong>Resultado:</strong> {transcribedText}</p>
-                      {recognizedWords.length > 0 && (
-                        <div style={{ marginTop: '10px', fontSize: '0.9em', color: '#666' }}>
-                          <strong>Palabras detectadas:</strong>
-                          <ul>
-                            {recognizedWords.map((word, index) => (
-                              <li key={index}>
-                                {word.word} (confianza: {(word.confidence * 100).toFixed(1)}%)
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
                     </div>
                   ) : (
                     <div>

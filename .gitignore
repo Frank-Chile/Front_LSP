@@ -1,4 +1,8 @@
+# Para los ya comiteados
+# git rm --cached ruta/del/archivo.ext
+
 /no tocar/
 /back3nd/app/__pycache__/
 node_modules/
 /back3nd/app/debug_frames/
+/back3nd/app/keys.py

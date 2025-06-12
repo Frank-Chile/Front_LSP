@@ -1,18 +1,40 @@
+# Librerías estándar y del entorno
 import os
-import numpy as np
+import sys
 import json
 import time
 import tempfile
-import cv2
-import mediapipe as mp
-from fastapi import APIRouter, UploadFile, File, HTTPException
-import tensorflow as tf
-from keras.layers import Input, LSTM, Dense, Dropout, Activation, RepeatVector, Permute, Multiply, Flatten
-from keras.models import Model
-from keras.regularizers import l2
-from keras.optimizers import Adam
-from groq import Groq
+
+# Procesamiento de arrays y visión
+import numpy as np # type: ignore
+import cv2 # type: ignore
+import mediapipe as mp # type: ignore
+
+# FastAPI y WebSocket
+from fastapi import APIRouter, UploadFile, File, HTTPException, WebSocket
+
+# Deep Learning
+import tensorflow as tf # type: ignore
+from keras.layers import Input, LSTM, Dense, Dropout, Activation, RepeatVector, Permute, Multiply, Flatten # type: ignore
+from keras.models import Model # type: ignore
+from keras.regularizers import l2 # type: ignore
+from keras.optimizers import Adam # type: ignore
+
+# Cargar claves y Groq
 import keys
+from groq import Groq # type: ignore
+
+# Incluir carpeta 'no tocar' para el conector de oraciones
+EXAMPLE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'no tocar'))
+if EXAMPLE_PATH not in sys.path:
+    sys.path.append(EXAMPLE_PATH)
+from sentence_connector import SignLanguageConnector # type: ignore
+
+# Configuración de Groq y conector de oraciones
+API_KEY = keys.GROQ_KEY_LLAMA
+os.environ["GROQ_API_KEY"] = API_KEY
+groq_client = Groq(api_key=API_KEY)
+sentence_connector = SignLanguageConnector()
 
 # Constantes del modelo (EXACTAS de Predicter.py)
 MIN_LENGTH_FRAMES = 10
@@ -32,11 +54,10 @@ API_KEY = keys.GROQ_KEY_LLAMA
 os.environ["GROQ_API_KEY"] = API_KEY
 
 router = APIRouter()
+from collections import deque
 
-# Variables globales
 loaded_model = None
 palabras_disponibles = PALABRAS
-groq_client = Groq(api_key=API_KEY)
 
 def get_word_ids(json_path):
     """Carga las palabras disponibles desde el archivo words.json"""
@@ -569,10 +590,16 @@ async def process_video(file: UploadFile = File(...)):
         word = palabras_disponibles[idx] if idx < len(palabras_disponibles) else ''
         # Limpiar archivo temporal
         os.unlink(video_path)
-        # Retornar resultado
+        # Alimentar palabras al conector en tiempo real
+        sentence_connector.add_word(word)
+        # Generar frase compuesta tras detección
+        words_list = [word]
+        composed_sentence = sentence_connector.process_words(" ".join(words_list))
+        # Retornar resultado con oración generada
         return {
             "success": True,
             "recognized_words": [{"word": word, "confidence": confidence}],
+            "sentence": composed_sentence,
             "total_frames": MODEL_FRAMES,
             "available_words": palabras_disponibles
         }
@@ -592,40 +619,20 @@ async def get_available_words():
 
 @router.post("/connect-words")
 async def connect_words(words: list[str]):
-    """Conecta una lista de palabras usando IA de Groq para formar oraciones coherentes"""
+    """Conecta una lista de palabras usando el conector AI para formar oraciones coherentes"""
     try:
         if not words:
             return {"connected_sentence": "", "original_words": []}
-        
-        words_text = " ".join(words)
-        print(f"Procesando palabras con Groq: {words_text}")
-        
-        completion = groq_client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": f"Conecta estas palabras de lenguaje de señas en una oración coherente en español: {words_text}"
-                }
-            ],
-            temperature=0.3,
-            max_tokens=100
-        )
-        
-        connected_sentence = completion.choices[0].message.content.strip()
-        
-        return {
-            "connected_sentence": connected_sentence,
-            "original_words": words
-        }
-        
+        # Alimentar palabras al conector
+        for w in words:
+            sentence_connector.add_word(w)
+        # Generar frase cuando haya inactividad
+        text = " ".join(words)
+        connected_sentence = sentence_connector.process_words(text)
+        return {"success": True, "connected_sentence": connected_sentence, "original_words": words}
     except Exception as e:
-        print(f"Error conectando palabras: {e}")
-        return {
-            "connected_sentence": " ".join(words),
-            "original_words": words,
-            "error": str(e)
-        }
+        print(f"Error en connect-words: {e}")
+        return {"success": False, "connected_sentence": " ".join(words), "original_words": words, "error": str(e)}
 
 # Función de inicialización
 def initialize_video_processing():
@@ -654,3 +661,54 @@ def initialize_video_processing():
 
 # Inicializar al importar el módulo
 initialize_video_processing()
+    
+@router.websocket("/realtime-recognition")
+async def realtime_recognition(websocket: WebSocket):
+    """WebSocket para reconocimiento en tiempo real y construcción de oraciones"""
+    await websocket.accept()
+    prev_results = None
+    # Buffer de keypoints (no usado directamente aquí, procesamos frame a frame)
+    try:
+        # Configurar MediaPipe holistic
+        with mp.solutions.holistic.Holistic(
+            static_image_mode=False,
+            model_complexity=0,
+            smooth_landmarks=True,
+            enable_segmentation=False,
+            smooth_segmentation=False,
+            refine_face_landmarks=False,
+            min_detection_confidence=0.6,
+            min_tracking_confidence=0.5
+        ) as holistic:
+            while True:
+                data = await websocket.receive_bytes()
+                # Decodificar frame
+                nparr = np.frombuffer(data, np.uint8)
+                frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                # Procesar frame
+                rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                rgb.flags.writeable = False
+                results = holistic.process(rgb)
+                rgb.flags.writeable = True
+                # Mejorar detección de manos
+                enhanced = hand_detection_for_keypoints(results, prev_results, force_hands=True)
+                prev_results = enhanced
+                # Enviar detección de palabra si hay manos
+                if count_hands_in_results(enhanced) > 0 and loaded_model:
+                    kp = extract_keypoints(enhanced, None, force_hands=True)
+                    # Predecir
+                    seq = np.expand_dims(kp, axis=0)
+                    norm = normalize_keypoints(np.expand_dims(seq, axis=0))
+                    pred = loaded_model.predict(norm, verbose=0)[0]
+                    idx = int(np.argmax(pred))
+                    conf = float(pred[idx])
+                    word = palabras_disponibles[idx] if idx < len(palabras_disponibles) else ''
+                    # Añadir al conector y enviar
+                    sentence_connector.add_word(word)
+                    await websocket.send_json({"type": "word", "word": word, "confidence": conf})
+                else:
+                    # Actualizar estado de manos para conector
+                    sentence_connector.update_hands_status(False)
+    except Exception as e:
+        # Cerrar conexión en error
+        await websocket.close()

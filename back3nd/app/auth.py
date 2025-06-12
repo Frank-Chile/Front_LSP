@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from database import SessionLocal
 from schemas import UserCreate, UserLogin
 from models import User
-import bcrypt
+import bcrypt # type: ignore
 
 router = APIRouter()
 
