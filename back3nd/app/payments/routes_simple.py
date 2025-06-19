@@ -2,7 +2,7 @@ from fastapi import APIRouter, Form, HTTPException, Response, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from typing import Optional, Dict
 from pydantic import BaseModel
-import requests
+import requests # type: ignore
 import logging
 import base64
 from datetime import datetime

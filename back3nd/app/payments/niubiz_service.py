@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-import requests
+import requests # type: ignore
 from typing import Dict, Any, Optional
 import logging
 
