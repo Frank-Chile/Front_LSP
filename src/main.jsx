@@ -8,6 +8,7 @@ import RegisterScreen from './screens/register_screen.jsx';
 import NosotrosScreen from "./screens/nosotros_screen.jsx";
 import AyudaScreen from "./screens/ayuda_screen.jsx";
 import PricingScreen from "./screens/pricing_screen.jsx";
+import PaymentResponseScreen from "./screens/payment_response_screen.jsx";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -19,6 +20,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/nosotros" element={<NosotrosScreen />} />
         <Route path="/ayuda" element={<AyudaScreen />} />
         <Route path='/pricing' element={<PricingScreen />} />
+        <Route path='/payment-response' element={<PaymentResponseScreen />} />
+        <Route path='/response' element={<PaymentResponseScreen />} />
+        <Route path='/error' element={<PaymentResponseScreen />} />
       </Routes>
     </Router>
   </React.StrictMode>

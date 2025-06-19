@@ -1,22 +1,94 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PaymentForm from '../components/payments/PaymentForm';
+import paymentService from '../services/payments/paymentService';
 import './pricing_screen.css';
 import logo from '../assets/icon-signal.png';
 
 const PricingPage = () => { 
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const navigate = useNavigate();
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
+  const [userEmail, setUserEmail] = useState('');
+  const navigate = useNavigate();  // Obtener el email del usuario desde localStorage o contexto
+  React.useEffect(() => {
+    const email = localStorage.getItem('email');
+    if (email) {
+      setUserEmail(email);
+    }
+  }, []);
 
   const handlePlanSelection = (planType) => {
     setSelectedPlan(planType);
-    // Aquí puedes agregar la lógica para procesar la selección del plan
-    console.log(`Plan seleccionado: ${planType}`);
+    
+    if (planType === 'free') {
+      handleContinueWithFree();
+      return;
+    }
+
+    // Configurar datos de pago según el plan
+    const planConfigs = {
+      premium: {
+        amount: 29.00,
+        plan_type: 'premium',
+        name: 'Premium Personal'
+      },
+      corporate: {
+        amount: 199.00,
+        plan_type: 'corporate',
+        name: 'Corporativo'
+      }
+    };
+
+    
+
+    const config = planConfigs[planType];
+    if (config && userEmail) {
+      setPaymentData({
+        ...config,
+        user_email: userEmail
+        
+      });
+      setShowPaymentForm(true);
+    } else if (!userEmail) {
+      alert('Por favor, inicia sesión antes de seleccionar un plan premium.');
+      navigate('/login');
+    }
   };
 
   const handleContinueWithFree = () => {
     // Redirigir al dashboard principal con plan gratuito
     localStorage.setItem('planType', 'free');
     navigate('/main');
+  };
+
+  const handlePaymentComplete = (result) => {
+    console.log('Pago completado exitosamente:', result);
+    
+    // Guardar información del plan en localStorage
+    localStorage.setItem('planType', paymentData.plan_type);
+    localStorage.setItem('paymentId', result.payment_id);
+    
+    // Redirigir al dashboard
+    navigate('/main', { 
+      state: { 
+        message: `¡Felicidades! Tu plan ${paymentData.name} está activo.`,
+        type: 'success' 
+      }
+    });
+  };
+
+  const handlePaymentError = (error) => {
+    console.error('Error en el pago:', error);
+    alert(`Error al procesar el pago: ${error.message}`);
+    setShowPaymentForm(false);
+    setPaymentData(null);
+  };
+
+  const handleClosePaymentForm = () => {
+    setShowPaymentForm(false);
+    setPaymentData(null);
+    setSelectedPlan(null);
   };
 
   return (
@@ -89,9 +161,7 @@ const PricingPage = () => {
             <span className="currency">S/</span>
             <span className="price">29</span>
             <span className="period">/ mes</span>
-          </div>
-
-          <button 
+          </div>          <button 
             className="plan-button premium-button"
             onClick={() => handlePlanSelection('premium')}
           >
@@ -130,13 +200,11 @@ const PricingPage = () => {
             <span className="price">199</span>
             <span className="period">/ mes</span>
             <small className="billing-note">Facturación anual</small>
-          </div>
-
-          <button 
+          </div>          <button 
             className="plan-button corporate-button"
             onClick={() => handlePlanSelection('corporate')}
           >
-            Contactar Ventas
+            Obtener Plan Corporativo
           </button>
 
           <div className="features-section">
@@ -154,9 +222,7 @@ const PricingPage = () => {
             </ul>
           </div>
         </div>
-      </div>
-
-      <div className="pricing-footer">
+      </div>      <div className="pricing-footer">
         <p className="footer-note">
           Los precios mostrados no incluyen impuestos aplicables. 
           <a href="#terms" className="footer-link">Términos y condiciones</a>
@@ -166,6 +232,30 @@ const PricingPage = () => {
           <span>Pago seguro y encriptado</span>
         </div>
       </div>
+
+      {/* Modal de Formulario de Pago */}
+      {showPaymentForm && paymentData && (
+        <div className="payment-modal-overlay">
+          <div className="payment-modal">
+            <div className="payment-modal-header">
+              <h2>Completar Pago</h2>
+              <button 
+                className="close-modal-button"
+                onClick={handleClosePaymentForm}
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="payment-modal-content">              <PaymentForm
+                amount={paymentData.amount}
+                planType={paymentData.plan_type}
+                onPaymentComplete={handlePaymentComplete}
+                onPaymentError={handlePaymentError}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

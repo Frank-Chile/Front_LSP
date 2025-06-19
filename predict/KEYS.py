@@ -1,0 +1,1 @@
+GROQ_KEY_LLAMA = "gsk_..."

@@ -1,0 +1,407 @@
+.payment-response {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.payment-response-container {
+  max-width: 600px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideIn 0.6s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Success Styles */
+.payment-response-success {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.success-icon {
+  font-size: 5rem;
+  color: #27ae60;
+  margin-bottom: 1.5rem;
+  animation: bounceIn 0.8s ease-out;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.payment-response-success h1 {
+  color: #27ae60;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.payment-response-success p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.transaction-info {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.transaction-info h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.transaction-info p {
+  color: #555;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.success-benefits {
+  background: #e8f5e8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.success-benefits h3 {
+  color: #27ae60;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.success-benefits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.success-benefits li {
+  color: #555;
+  margin: 0.8rem 0;
+  font-size: 1rem;
+}
+
+/* Failed Styles */
+.payment-response-failed {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.failed-icon {
+  font-size: 5rem;
+  color: #e74c3c;
+  margin-bottom: 1.5rem;
+  animation: shake 0.8s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.payment-response-failed h1 {
+  color: #e74c3c;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.payment-response-failed p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.failed-reasons {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.failed-reasons h3 {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.failed-reasons ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.failed-reasons li {
+  color: #555;
+  margin: 0.8rem 0;
+  font-size: 1rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.failed-reasons li::before {
+  content: "•";
+  color: #e74c3c;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+/* Error Styles */
+.payment-response-error {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.error-icon {
+  font-size: 5rem;
+  color: #f39c12;
+  margin-bottom: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.payment-response-error h1 {
+  color: #f39c12;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.payment-response-error p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.error-help {
+  background: #fff8e1;
+  border: 1px solid #ffecb3;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.error-help h3 {
+  color: #f39c12;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.error-help p {
+  color: #555;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.error-help ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-help li {
+  color: #555;
+  margin: 0.8rem 0;
+  font-size: 1rem;
+}
+
+/* Loading Styles */
+.payment-response-loading {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.loading-icon {
+  font-size: 5rem;
+  color: #3498db;
+  margin-bottom: 1.5rem;
+}
+
+.payment-response-loading h1 {
+  color: #3498db;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.payment-response-loading p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* Button Styles */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.primary-button:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.secondary-button {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.secondary-button:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-response {
+    padding: 1rem;
+  }
+
+  .payment-response-container {
+    border-radius: 12px;
+  }
+
+  .payment-response-success,
+  .payment-response-failed,
+  .payment-response-error,
+  .payment-response-loading {
+    padding: 2rem 1.5rem;
+  }
+
+  .payment-response-success h1,
+  .payment-response-failed h1,
+  .payment-response-error h1,
+  .payment-response-loading h1 {
+    font-size: 2rem;
+  }
+
+  .success-icon,
+  .failed-icon,
+  .error-icon,
+  .loading-icon {
+    font-size: 4rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-response-success h1,
+  .payment-response-failed h1,
+  .payment-response-error h1,
+  .payment-response-loading h1 {
+    font-size: 1.8rem;
+  }
+
+  .success-icon,
+  .failed-icon,
+  .error-icon,
+  .loading-icon {
+    font-size: 3.5rem;
+  }
+
+  .transaction-info,
+  .success-benefits,
+  .failed-reasons,
+  .error-help {
+    padding: 1rem;
+  }
+}

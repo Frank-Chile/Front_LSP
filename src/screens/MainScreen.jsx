@@ -934,10 +934,10 @@ function MainScreen() {
             <h1 className="brand-title">SEÑALIA</h1>
           </div>
 
-          <div className="user-info">
-            <span className="user-name">Bienvenido, {userData.nombre}</span>
+          <div className="user-info">            <span className="user-name">Bienvenido, {userData.nombre}</span>
             <Link className="navbar-link" to="/nosotros">Sobre Nosotros</Link>
             <Link className="navbar-link" to="/ayuda">Ayuda</Link>
+            <Link className="navbar-link" to="/pricing">Planes</Link>
           
             <div className="plan-indicator">
               <span className={`plan-badge ${userPlan}`}>

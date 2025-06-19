@@ -25,7 +25,7 @@ import keys
 from groq import Groq # type: ignore
 
 # Incluir carpeta 'no tocar' para el conector de oraciones
-EXAMPLE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'no tocar'))
+EXAMPLE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'predict'))
 if EXAMPLE_PATH not in sys.path:
     sys.path.append(EXAMPLE_PATH)
 from sentence_connector import SignLanguageConnector # type: ignore
@@ -44,7 +44,7 @@ MODEL_FRAMES = 20
 PALABRAS = ["AMIGO", "TU", "HOLA", "JUGAR", "YO"]
 
 # Configuración de paths
-ROOT_PATH = "../../no tocar"
+ROOT_PATH = "../../predict"
 WORDS_JSON_PATH = os.path.join(ROOT_PATH, 'words.json')
 MODEL_FOLDER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'model')
 MODEL_PATH = os.path.join(MODEL_FOLDER_PATH, 'cv_best_model_20.keras')

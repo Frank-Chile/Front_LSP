@@ -9,3 +9,9 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: str
     clave: str
+
+class UserTransactionRequest(BaseModel):
+    email: str
+    transaction_token: str
+    amount: float
+    timestamp: str
