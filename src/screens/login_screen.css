@@ -1,3 +1,7 @@
+/* =================== IMPORTS =================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
+
+/* =================== GENERAL LAYOUT =================== */
 .split-container {
     display: flex;
     height: 100vh;
@@ -6,6 +10,7 @@
     padding: 0;
 }
 
+/* =================== LEFT HALF - FORM SECTION =================== */
 .left-half {
     flex: 1;
     display: flex;
@@ -13,203 +18,285 @@
     justify-content: center;
     align-items: center;
     background-color: #d1d1e9;
+    padding: 2rem;
 }
 
-.right-half {
-    flex: 1;
-    background-color: #ffffff; /* Color temporal, se cambiará según lo que necesites */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Branding section */
+.branding {
+    font-family: "Times New Roman", Times, serif; 
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .logo-title {
     display: flex;
-    align-items: center; /* Esto ya lo tienes, es correcto */
+    align-items: center;
     justify-content: center;
-    /* gap: 1rem; */
-    /* margin-bottom: 1rem; */
-    height: 60px; /* Añade una altura fija para contener ambos elementos */
+    height: 60px;
+    margin-bottom: 1rem;
 }
 
 .brand-logo {
-    width: 50px; /* Aumenté ligeramente el tamaño para mejor proporción */
-    height: 50px; /* Añade altura fija igual al ancho */
+    width: 50px;
+    height: 50px;
     object-fit: contain;
-    align-self: center; /* Fuerza alineación vertical */
-    margin-bottom: 15px;
+    margin-right: 0.5rem;
 }
 
-/* Ajusta los estilos del título */
 .logo-title h1 {
     margin: 0;
-    font-size: 2.5rem; /* Tamaño consistente con tu media query */
-    color: #1f1235;
-    line-height: 1; /* Elimina espacio adicional de línea */
-    display: flex;
-    align-items: center; /* Alinea el texto con el logo */
-    height: 100%; /* Ocupa toda la altura del contenedor */
-}
-
-.branding {
-    font-family: "Times New Roman", Times, serif; 
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.branding h1 {
-    color: #1f1235;
     font-size: 3rem;
+    color: #1f1235;
+    line-height: 1;
 }
 
 .tagline {
     color: #555;
     font-size: 1.2em;
     font-style: italic;
+    margin: 0;
 }
 
+/* Login form */
 .login-form {
-    padding: 20px;
-    border-radius: 8px;
+    padding: 2rem;
+    border-radius: 12px;
     background-color: #fff;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 350px;
     transition: box-shadow 0.3s ease;
-    margin-bottom: 7rem;
 }
 
 .login-form:hover {
-    box-shadow: 0 30px 40px rgba(98, 70, 234, 0.25);
+    box-shadow: 0 15px 35px rgba(98, 70, 234, 0.25);
 }
 
-h2 {
+.login-form h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
     color: #333;
+    font-size: 1.5rem;
 }
 
+/* =================== INPUT GROUPS =================== */
 .input-group {
-    margin-bottom: 10px;
-    font-family: 'Segoe UI', sans-serif;
-    margin: 1em 0 1em 0;
-    max-width: 250px;
     position: relative;
+    margin-bottom: 1.5rem;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .input-group i {
     position: absolute;
-    top: 100%;
-    left: 10px;
+    top: 50%;
+    left: 1rem;
     transform: translateY(-50%);
-    color: rgb(0, 0, 0);
+    color: #666;
     font-size: 1.2em;
     pointer-events: none;
+    z-index: 2;
+}
+
+.input-group input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 1rem 1rem 1rem 3rem;
+    outline: none;
+    border: 2px solid #a0a0a0;
+    border-radius: 20px;
+    background-color: transparent;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group input:valid {
+    border-color: #9696c8;
 }
 
 .input-group label {
     position: absolute;
     font-size: 0.9em;
     top: 50%;
-    left: 40px;
+    left: 3rem;
     transform: translateY(-50%);
-    padding: 0;
+    padding: 0 0.4em;
     margin: 0;
     pointer-events: none;
     transition: all 0.3s ease;
-    color: rgb(100, 100, 100);
+    color: #666;
     background-color: transparent;
 }
 
-.input-group input {
-    font-size: 100%;
-    padding: 0.8em 0.8em 0.8em 2.5em;
-    outline: none;
-    border: 2px solid rgb(160, 160, 160);
-    border-radius: 20px;
-    background-color: transparent;
-    border-radius: 20px;
-    width: 100%;
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.input-group input.has-content ~ label,
+.input-group label.active {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: #333;
+    background-color: white;
+}
+
+/* Asegurar que los campos con autocompletado también activen el label */
+.input-group input:-webkit-autofill ~ label,
+.input-group input:-webkit-autofill:hover ~ label,
+.input-group input:-webkit-autofill:focus ~ label {
+    top: 0;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: #333;
+    background-color: white;
+}
+
+/* Estilos para campos autocompletados */
+.input-group input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    -webkit-text-fill-color: #333;
+}
+
+.input-group input:-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    -webkit-text-fill-color: #333;
+}
+
+.input-group input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    -webkit-text-fill-color: #333;
+}
+
+/* Password toggle */
+.password-toggle {
+    position: absolute !important;
+    right: 1rem !important;
+    left: auto !important;
+    cursor: pointer;
+    pointer-events: auto !important;
+    color: #666 !important;
+    transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
     color: #333;
 }
 
-.input-group i:last-child {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    left: 110%;
-    transform: translateY(-50%);
-    color: rgb(0, 0, 0);
-    font-size: 1.2em; 
-    cursor: pointer;
-    pointer-events: auto;
-}
-
-.input-group input:focus~label,
-.input-group input:not(:placeholder-shown)~label {
-    top: -10px;
-    transform: translateY(0);
-    font-size: -0.8em;
-    color: rgb(48, 48, 48);
-    background-color: white; 
-    padding: 0 0.4em;
-    margin-bottom: 20px;
-}
-
-.input-group :is(input:focus, input:valid) {
-    border-color: rgb(150, 150, 200);
-}
-
+/* =================== FORM ELEMENTS =================== */
 .extra-options {
     display: flex;
-    justify-content: end;
-    margin: 15px;   
+    justify-content: flex-end;
+    margin-bottom: 1rem;   
 }
 
-a {
+.forgot-link {
     color: #6246ea;
     text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
 }
 
-a:hover {
+.forgot-link:hover {
+    color: #5438d5;
     text-decoration: underline;
 }
 
-button {
+.error-message {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    background-color: #fdf2f2;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+}
+
+.login-button {
     width: 100%;
-    padding: 10px;
+    padding: 1rem;
     background-color: #6246ea;
     color: white;
+    border: none;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
 }
 
-button:hover {
-    transform: translateY(-4px);
+.login-button:hover {
+    transform: translateY(-2px);
     background-color: #5438d5;
+    box-shadow: 0 4px 12px rgba(98, 70, 234, 0.3);
 }
 
-.link {
-    color: #6246ea;
-    margin: 10px;
-}
-
-.error {
-    color: red;
-    margin-top: 10px;
+.register-text {
     text-align: center;
+    margin: 0;
+    color: #666;
 }
 
-/* SECCION DERECHA */
-.right-text {
-    animation: fadeInUp 2s ease-out;
+.register-link {
+    color: #6246ea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link:hover {
+    color: #5438d5;
+    text-decoration: underline;
+}
+
+/* =================== RIGHT HALF - IMAGE SECTION =================== */
+.right-half {
+    flex: 1;
+    background-color: #fffffe;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.right-half::before {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -20%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(98,70,234,0.1) 0%, rgba(255,255,255,0) 70%);
+    z-index: 0;
+}
+
+.right-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
 
 .right-image {
+    width: 90%;
+    max-width: 40rem;
+    height: auto;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(98, 70, 234, 0.2);
+    transition: transform 0.5s ease;
     animation: fadeIn 2.4s ease-out;
 }
 
+.right-image:hover {
+    transform: scale(1.03);
+}
+
+/* =================== ANIMATIONS =================== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -225,81 +312,36 @@ button:hover {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-.right-content::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-    z-index: 1;
-}
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
-.right-text {
-    font-family: 'Poppins', sans-serif;
-}
-/* ------------------- */
-.right-half {
-    flex: 1;
-    background-color: #fffffe; /* Fondo más suave */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden; /* Para contener efectos */
-}
 
-.right-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-
-
-.right-image {
-    width: 90%;
-    max-width: 40rem;
-    height: auto;
-    object-fit: contain;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(98, 70, 234, 0.2);
-    transition: transform 0.5s ease;
-    position: relative;
-    z-index: 1;
-    /* margin-bottom: 12rem; */
-}
-
-/* Efecto hover para la imagen */
-.right-image:hover {
-    transform: scale(1.03);
-}
-
-/* Efecto de onda decorativo opcional */
-.right-half::before {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: -20%;
-    width: 150%;
-    height: 150%;
-    background: radial-gradient(circle, rgba(98,70,234,0.1) 0%, rgba(255,255,255,0) 70%);
-    z-index: 0;
-}
-  
-
-/* Media query para dispositivos móviles */
+/* =================== RESPONSIVE DESIGN =================== */
 @media (max-width: 768px) {
+    .split-container {
+        flex-direction: column;
+    }
+    
+    .left-half {
+        padding: 1rem;
+    }
+    
     .brand-logo {
-      width: 40px;
+        width: 40px;
+        height: 40px;
     }
     
     .logo-title h1 {
-      font-size: 2.5rem;
+        font-size: 2.5rem;
     }
-  }
+    
+    .login-form {
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+    
+    .right-half {
+        min-height: 40vh;
+    }
+    
+    .right-image {
+        max-width: 80%;
+    }
+}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './register_screen.css';
 import axios from 'axios';
 
@@ -69,51 +69,55 @@ const RegistroCliente = () => {
           <input 
             type="email"
             id="email"
-            placeholder=''
+            placeholder=""
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required autoComplete='off'
+            required 
+            autoComplete="email"
           />
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
         </div>
         <div className="input-group">
-          <i className='fas fa-user'></i>
+          <i className="fas fa-user"></i>
           <input 
             type="text" 
             id="nombre"
-            placeholder='' 
+            placeholder=""
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            required autoComplete='off'
+            required 
+            autoComplete="name"
           />
-          <label>Nombre y Apellidos</label>
+          <label htmlFor="nombre">Nombre y Apellidos</label>
         </div>
         <div className="input-group">
-          <i className='fas fa-phone'></i>
+          <i className="fas fa-phone"></i>
           <input 
             type="tel" 
             id="telefono"
-            placeholder=''
+            placeholder=""
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
-            required autoComplete='off'
+            required 
+            autoComplete="tel"
           />
-          <label>Teléfono</label>
+          <label htmlFor="telefono">Teléfono</label>
         </div>
         <div className="input-group">
-          <i className='fas fa-lock'></i>
+          <i className="fas fa-lock"></i>
           <input 
             type={showPassword ? 'text' : 'password'}
             id="clave" 
-            placeholder=''
+            placeholder=""
             value={clave}
             onChange={(e) => setClave(e.target.value)}
-            required autoComplete='off'
+            required 
+            autoComplete="new-password"
           />
-          <label>Contraseña</label>
+          <label htmlFor="clave">Contraseña</label>
           <i 
-            className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} // Cambia el ícono
-            onClick={() => setShowPassword(!showPassword)} // Alterna el estado
+            className={`fas password-toggle ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+            onClick={() => setShowPassword(!showPassword)}
           ></i>
         </div>
         <button type="submit" className="register-button">Registrarse</button>
