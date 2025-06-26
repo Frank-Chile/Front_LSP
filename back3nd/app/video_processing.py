@@ -24,7 +24,6 @@ from keras.optimizers import Adam # type: ignore
 import keys
 from groq import Groq # type: ignore
 
-# Incluir carpeta 'no tocar' para el conector de oraciones
 EXAMPLE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'predict'))
 if EXAMPLE_PATH not in sys.path:
     sys.path.append(EXAMPLE_PATH)

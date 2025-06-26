@@ -207,11 +207,19 @@
 
 /* Banner de limitación (ahora arriba) */
 .plan-limitation-banner {
-  width: 100%;
+  width: 80%;
+  margin: 0 auto;
   background: #fff8e1; /* Color de fondo amarillo claro (ajustable) */
-  padding: 0.7rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.plan-limitation-banner.limit-reached {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
 }
 
 .limitation-content {
@@ -219,23 +227,27 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.limitation-content i {
-  color: #f59e0b;
-  font-size: 1.2rem;
-}
-
-.limitation-content span {
+.usage-summary {
   font-weight: 500;
   color: #000000;
+  text-align: center;
+  flex: 1;
+  min-width: 250px;
+}
+
+.plan-limitation-banner.limit-reached .usage-summary {
+  color: #dc2626;
 }
 
 .upgrade-banner-btn {
-  max-width: 180px;
+  text-align: center;
   padding: 0.5rem 1rem;
   background: linear-gradient(135deg, #f59e0b, #fbbf24);
   color: white;
+  width: 20%;
   border: none;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -243,6 +255,7 @@
   transition: all 0.3s ease;
   font-weight: 600;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .upgrade-banner-btn:hover {
@@ -251,6 +264,67 @@
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
+.limit-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  color: #dc2626;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.limit-alert i {
+  color: #dc2626 !important;
+  font-size: 0.9rem;
+}
+
+/* Remove old banner styles */
+.limitation-text-section,
+.usage-details,
+.usage-bar,
+.usage-progress,
+.usage-count,
+.reset-time {
+  display: none;
+}
+
+/* Responsive for compact banner */
+@media (max-width: 768px) {
+  .limitation-content {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .usage-summary {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+  
+  .upgrade-banner-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .plan-limitation-banner {
+    padding: 0.5rem;
+  }
+  
+  .usage-summary {
+    font-size: 0.85rem;
+  }
+  
+  .limit-alert {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+}
 
 /* ============================================
    CONTENEDOR PRINCIPAL DE SECCIONES
@@ -1028,5 +1102,210 @@
   
   .sentence-text {
     font-size: 1rem;
+  }
+}
+
+/* ============================================
+   USAGE COUNTER STYLES
+   ============================================ */
+.usage-counter {
+  width: 100%;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(108, 99, 255, 0.15);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.usage-counter.limit-reached {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+}
+
+.usage-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.usage-text {
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 1rem;
+}
+
+.usage-counter.limit-reached .usage-text {
+  color: #dc2626;
+}
+
+.reset-time {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.usage-counter.limit-reached .reset-time {
+  color: #991b1b;
+}
+
+.usage-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.usage-progress {
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, currentColor 0%, currentColor 100%);
+  position: relative;
+}
+
+.usage-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+  animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.limit-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #dc2626;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.limit-message i {
+  color: #dc2626;
+  font-size: 1rem;
+}
+
+/* Estilos para botones deshabilitados */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+button:disabled:hover {
+  background: initial !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.record-btn:disabled,
+.process-video-btn:disabled,
+.realtime-btn:disabled {
+  background: #9ca3af !important;
+  color: #6b7280 !important;
+  border-color: #d1d5db !important;
+}
+
+.video-input:disabled {
+  background-color: #f3f4f6 !important;
+  color: #9ca3af !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsive para usage counter */
+@media (max-width: 768px) {
+  .usage-counter {
+    padding: 0.75rem;
+  }
+  
+  .usage-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .usage-text {
+    font-size: 0.9rem;
+  }
+  
+  .reset-time {
+    font-size: 0.8rem;
+  }
+  
+  .limit-message {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .usage-counter {
+    padding: 0.5rem;
+  }
+  
+  .usage-text {
+    font-size: 0.85rem;
+  }
+  
+  .reset-time {
+    font-size: 0.75rem;
+  }
+  
+  .usage-bar {
+    height: 6px;
+  }
+  
+  .limit-message {
+    font-size: 0.8rem;
+  }
+}
+  .limit-message {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+
+@media (max-width: 480px) {
+  .usage-counter {
+    padding: 0.5rem;
+  }
+  
+  .usage-text {
+    font-size: 0.85rem;
+  }
+  
+  .reset-time {
+    font-size: 0.75rem;
+  }
+  
+  .usage-bar {
+    height: 6px;
+  }
+  
+  .limit-message {
+    font-size: 0.8rem;
   }
 }

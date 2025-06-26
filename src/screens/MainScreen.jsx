@@ -11,8 +11,16 @@ function MainScreen() {
     const [userData, setUserData] = useState({
         nombre: '',
         email: ''
-      });    const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [userPlan, setUserPlan] = useState('free'); // Estado para el plan del usuario
+      });
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [userPlan, setUserPlan] = useState('free');
+    
+    // Estados del contador de uso
+    const [dailyUsageCount, setDailyUsageCount] = useState(0);
+    const [dailyUsageLimit, setDailyUsageLimit] = useState(10);
+    const [lastResetDate, setLastResetDate] = useState(null);
+    const [isUsageLimitReached, setIsUsageLimitReached] = useState(false);
+    
     const [videoFile, setVideoFile] = useState(null);
     const [videoUrl, setVideoUrl] = useState("");
     const [transcribedText, setTranscribedText] = useState("");
@@ -93,6 +101,11 @@ function MainScreen() {
         return;
       }
 
+      if (!canUseFunction()) {
+        alert(`Has alcanzado el límite diario de ${userPlan === 'free' ? 10 : userPlan === 'premium' ? 100 : 1000} consultas. Mejora tu plan o espera al reset diario.`);
+        return;
+      }
+
       setIsProcessing(true);
       setTranscribedText("Procesando video...");
 
@@ -107,6 +120,9 @@ function MainScreen() {
         });
 
         if (response.data.success) {
+          // Incrementar contador solo si la operación fue exitosa
+          incrementUsageCount();
+          
           const { recognized_words } = response.data;
           setRecognizedWords(recognized_words);
           
@@ -172,6 +188,13 @@ function MainScreen() {
       });
       setUserPlan(planType);
 
+      // Configurar límites según el plan
+      const limit = planType === 'free' ? 10 : (planType === 'premium' ? 100 : 1000);
+      setDailyUsageLimit(limit);
+
+      // Verificar y resetear contador diario
+      checkAndResetDailyUsage();
+
       // Cargar palabras disponibles
       fetchAvailableWords();
     }, [navigate]);
@@ -195,6 +218,14 @@ function MainScreen() {
     };    // Función para iniciar reconocimiento en tiempo real
     const handleRealTimeRecognition = async () => {
       if (!isRealTimeActive) {
+        if (!canUseFunction()) {
+          alert(`Has alcanzado el límite diario de ${userPlan === 'free' ? 10 : userPlan === 'premium' ? 100 : 1000} consultas. Mejora tu plan o espera al reset diario.`);
+          return;
+        }
+
+        // Incrementar contador al iniciar sesión de tiempo real
+        incrementUsageCount();
+
         try {
           console.log('🚀 Iniciando modo cámara en tiempo real...');
           
@@ -488,7 +519,7 @@ function MainScreen() {
               };
               
               realTimeVideoRef.current.onabort = () => {
-                console.warn('⚠️ Video aborted');
+                console.warn('⚠️ Video abortado');
               };
               
               // Si ya tiene metadata, procesarla inmediatamente
@@ -924,11 +955,77 @@ function MainScreen() {
       };
     }, [websocket, isRealTimeActive]);
 
+    // Función para obtener la fecha actual en formato YYYY-MM-DD
+    const getCurrentDate = () => {
+        return new Date().toISOString().split('T')[0];
+    };
+
+    // Función para verificar y resetear el contador diario
+    const checkAndResetDailyUsage = () => {
+        const currentDate = getCurrentDate();
+        const storedDate = localStorage.getItem('lastResetDate');
+        const storedCount = parseInt(localStorage.getItem('dailyUsageCount') || '0');
+
+        if (!storedDate || storedDate !== currentDate) {
+            // Es un nuevo día, resetear contador
+            setDailyUsageCount(0);
+            setLastResetDate(currentDate);
+            setIsUsageLimitReached(false);
+            localStorage.setItem('dailyUsageCount', '0');
+            localStorage.setItem('lastResetDate', currentDate);
+            console.log('📅 Contador diario reseteado para el nuevo día:', currentDate);
+        } else {
+            // Mismo día, cargar contador existente
+            setDailyUsageCount(storedCount);
+            setLastResetDate(storedDate);
+            
+            // Verificar si se alcanzó el límite
+            const limit = userPlan === 'free' ? 10 : (userPlan === 'premium' ? 100 : 1000);
+            setIsUsageLimitReached(storedCount >= limit);
+        }
+    };
+
+    // Función para incrementar el contador de uso
+    const incrementUsageCount = () => {
+        if (!isUsageLimitReached) {
+            const newCount = dailyUsageCount + 1;
+            const limit = userPlan === 'free' ? 10 : (userPlan === 'premium' ? 100 : 1000);
+            
+            setDailyUsageCount(newCount);
+            localStorage.setItem('dailyUsageCount', newCount.toString());
+            
+            if (newCount >= limit) {
+                setIsUsageLimitReached(true);
+                console.log('⚠️ Límite de uso diario alcanzado');
+            }
+            
+            console.log(`📊 Uso actualizado: ${newCount}/${limit}`);
+        }
+    };
+
+    // Función para verificar si se puede usar una función
+    const canUseFunction = () => {
+        const limit = userPlan === 'free' ? 10 : (userPlan === 'premium' ? 100 : 1000);
+        return dailyUsageCount < limit;
+    };
+
+    // Función para obtener tiempo restante hasta el reset
+    const getTimeUntilReset = () => {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        
+        const timeDiff = tomorrow.getTime() - now.getTime();
+        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        return { hours, minutes };
+    };
+
     return (
       <div className="main-container">
-
         <nav className="navbar">
-
           <div className="navbar-brand">
             <img src={iconSignal} alt="Señalia-Logo" className="brand-logo" />
             <h1 className="brand-title">SEÑALIA</h1>
@@ -991,18 +1088,24 @@ function MainScreen() {
         </nav>
 
         <main className="content">
-          {/* Contenedor principal para el banner y las secciones */}
           <div className="main-content-wrapper">
-            {/* Banner de limitación de plan (ahora arriba de todo) */}
+            {/* Compact usage banner */}
             {userPlan === 'free' && (
-              <div className="plan-limitation-banner">
+              <div className={`plan-limitation-banner ${isUsageLimitReached ? 'limit-reached' : ''}`}>
                 <div className="limitation-content">
-                  <i className="fas fa-info-circle"></i>
-                  <span>Tienes 10 consultas diarias disponibles.</span>
+                  <span className="usage-summary">
+                    Usos disponibles {dailyUsageLimit - dailyUsageCount}/{dailyUsageLimit}, se reinicia en {getTimeUntilReset().hours}h {getTimeUntilReset().minutes}m
+                  </span>
                   <button className="upgrade-banner-btn" onClick={handleUpgradePlan}>
                     Mejorar a Premium
                   </button>
                 </div>
+                {isUsageLimitReached && (
+                  <div className="limit-alert">
+                    <i className="fas fa-exclamation-triangle"></i>
+                    Límite diario alcanzado. Mejora tu plan o espera al reset.
+                  </div>
+                )}
               </div>
             )}
 
@@ -1026,6 +1129,7 @@ function MainScreen() {
                     accept="video/*"
                     onChange={handleVideoUpload}
                     className="video-input"
+                    disabled={isUsageLimitReached}
                   />
                 </div>                {/* Contenedor de videos */}
                 <div className="upload-container">
@@ -1245,7 +1349,7 @@ function MainScreen() {
                     <button 
                       className="process-video-btn" 
                       onClick={handleProcessVideo}
-                      disabled={isProcessing}
+                      disabled={isProcessing || isUsageLimitReached}
                     >
                       {isProcessing ? 'Procesando...' : 'Procesar con IA'}
                     </button>
@@ -1255,6 +1359,7 @@ function MainScreen() {
                     <button 
                       className={`realtime-btn ${isRealTimeActive ? 'active' : ''}`}
                       onClick={handleRealTimeRecognition}
+                      disabled={isUsageLimitReached && !isRealTimeActive}
                     >
                       {isRealTimeActive ? 'Detener Tiempo Real' : 'Reconocimiento en Tiempo Real'}
                     </button>
