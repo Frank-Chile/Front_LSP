@@ -32,10 +32,15 @@ function MainScreen() {
     const [realTimeWords, setRealTimeWords] = useState([]);
     const [realTimeSentence, setRealTimeSentence] = useState("");
     const [websocket, setWebsocket] = useState(null);
+    
+    // Nuevo estado para historial de chat
+    const [chatHistory, setChatHistory] = useState([]);
+    
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const chunksRef = useRef([]);
-    const realTimeVideoRef = useRef(null);    const canvasRef = useRef(null);
+    const realTimeVideoRef = useRef(null);
+    const canvasRef = useRef(null);
     const streamRef = useRef(null);
     
 
@@ -89,9 +94,34 @@ function MainScreen() {
         videoRef.current.srcObject = null;
       }
     };
+    // Función para agregar mensaje al historial
+    const addToHistory = (text, type = 'translation', method = 'video') => {
+        if (!text || text.trim() === '') return;
+        
+        const newMessage = {
+            id: Date.now(),
+            text: text.trim(),
+            type: type, // 'translation', 'realtime', 'processing'
+            method: method, // 'video', 'realtime'
+            timestamp: new Date().toLocaleTimeString('es-PE', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            })
+        };
+        
+        setChatHistory(prev => [...prev, newMessage]);
+    };
+
+    // Función para limpiar historial
+    const clearHistory = () => {
+        setChatHistory([]);
+    };
+
     const handleClearText = () => {
       setTranscribedText("");
       setRecognizedWords([]);
+      clearHistory(); // Limpiar historial también
     };
 
     // Función para procesar el video con IA
@@ -107,7 +137,10 @@ function MainScreen() {
       }
 
       setIsProcessing(true);
-      setTranscribedText("Procesando video...");
+      const processingMessage = "Procesando video...";
+      setTranscribedText(processingMessage);
+      // Remove this line to prevent "Procesando video..." from appearing in chat
+      // addToHistory(processingMessage, 'processing', 'video');
 
       try {
         const formData = new FormData();
@@ -134,25 +167,36 @@ function MainScreen() {
                   'http://localhost:8000/video/connect-words',
                   words
                 );
-                setTranscribedText(connectResponse.data.connected_sentence);
+                const finalText = connectResponse.data.connected_sentence;
+                setTranscribedText(finalText);
+                addToHistory(finalText, 'translation', 'video');
                 console.log("Palabras", recognizedWords)
               } catch (connectError) {
                 console.error('Error conectando palabras:', connectError);
-                setTranscribedText('');
+                const wordsText = words.join(' ');
+                setTranscribedText(wordsText);
+                addToHistory(wordsText, 'translation', 'video');
               }
             } else {
-              setTranscribedText("No se reconocieron palabras en el video. Asegúrate de que tus manos sean visibles y realices gestos claros.");
+              const noWordsMessage = "No se reconocieron palabras en el video. Asegúrate de que tus manos sean visibles y realices gestos claros.";
+              setTranscribedText(noWordsMessage);
+              addToHistory(noWordsMessage, 'translation', 'video');
           }
         } else {
-          setTranscribedText("Error procesando el video. Inténtalo nuevamente.");
+          const errorMessage = "Error procesando el video. Inténtalo nuevamente.";
+          setTranscribedText(errorMessage);
+          addToHistory(errorMessage, 'translation', 'video');
         }
       } catch (error) {
         console.error('Error procesando video:', error);
+        let errorMessage = "";
         if (error.response?.status === 500) {
-          setTranscribedText("Error del servidor. El modelo de IA podría no estar disponible.");
+          errorMessage = "Error del servidor. El modelo de IA podría no estar disponible.";
         } else {
-          setTranscribedText("Error de conexión. Verifica que el servidor esté funcionando.");
+          errorMessage = "Error de conexión. Verifica que el servidor esté funcionando.";
         }
+        setTranscribedText(errorMessage);
+        addToHistory(errorMessage, 'translation', 'video');
       } finally {
         setIsProcessing(false);
       }
@@ -640,10 +684,14 @@ function MainScreen() {
                   if (data.status === 'word_recognized') {
                     setRealTimeWords(data.words_session || []);
                     console.log('🤟 Palabra:', data.word);
+                    // Agregar palabra reconocida al historial
+                    addToHistory(`Palabra: ${data.word}`, 'realtime', 'realtime');
                   } else if (data.status === 'sentence_formed') {
                     setRealTimeWords(data.words_session || []);
                     setRealTimeSentence(data.sentence);
                     console.log('📝 Oración:', data.sentence);
+                    // Agregar oración formada al historial
+                    addToHistory(data.sentence, 'translation', 'realtime');
                   }
                 } else if (message.type === 'connection_established') {
                   console.log('✅ Conexión confirmada por el servidor');
@@ -1126,6 +1174,8 @@ function MainScreen() {
                   )}
                   <input
                     type="file"
+                    id="video-upload"
+                    name="video-upload"
                     accept="video/*"
                     onChange={handleVideoUpload}
                     className="video-input"
@@ -1355,14 +1405,14 @@ function MainScreen() {
                     </button>
                     )}
                     
-                    {/* Botón tiempo real */}
+                    {/* Botón tiempo real 
                     <button 
                       className={`realtime-btn ${isRealTimeActive ? 'active' : ''}`}
                       onClick={handleRealTimeRecognition}
                       disabled={isUsageLimitReached && !isRealTimeActive}
                     >
                       {isRealTimeActive ? 'Detener Tiempo Real' : 'Reconocimiento en Tiempo Real'}
-                    </button>
+                    </button>*/}
                   </div>
                 </div>
               </div>
@@ -1373,63 +1423,86 @@ function MainScreen() {
                 <div className="text-header">
                   <h2>Texto Transcrito</h2>
                   <button className="clear-btn" onClick={handleClearText}>
-                    Limpiar
+                    Limpiar Historial
                   </button>
-                </div>                  <div className="text-container">
-                  {isRealTimeActive ? (
-                    <div className="realtime-results">
-                      <h3>Reconocimiento en Tiempo Real</h3>
-                      
-                      {realTimeWords.length > 0 && (
-                        <div className="realtime-words">
-                          <h4>Palabras Reconocidas:</h4>
-                          <div className="words-list">
-                            {realTimeWords.map((word, index) => (
-                              <span key={index} className="word-tag realtime">
-                                {word.word} ({(word.confidence * 100).toFixed(1)}%)
-                              </span>
-                            ))}
+                </div>
+                
+                <div className="text-container">
+                  {/* Mostrar historial de chat */}
+                  {chatHistory.length > 0 ? (
+                    <div className="chat-history">
+                      {chatHistory.map((message) => (
+                        <div key={message.id} className={`chat-message ${message.type}`}>
+                          <div className="message-header">
+                            <span className="message-method">
+                              {message.method === 'video' ? '📹 Video' : '🎥 Tiempo Real'}
+                            </span>
+                            <span className="message-time">{message.timestamp}</span>
+                          </div>
+                          <div className="message-content">
+                            {message.text}
                           </div>
                         </div>
-                      )}
-                      
-                      {realTimeSentence && (
-                        <div className="realtime-sentence">
-                          <h4>Oración Formada:</h4>
-                          <p className="sentence-text">{realTimeSentence}</p>
-                        </div>
-                      )}
-                      
-                      {realTimeWords.length === 0 && !realTimeSentence && (
-                        <p className="placeholder-text">
-                          Realiza señas frente a la cámara para reconocimiento en tiempo real...
-                        </p>
-                      )}
-                    </div>
-                  ) : transcribedText ? (
-                    <div>
-                      <p>{transcribedText}</p>
+                      ))}
                     </div>
                   ) : (
                     <div>
-                      <p className="placeholder-text">
-                        El texto transcrito aparecerá aquí cuando el video sea procesado.
-                      </p>
-                      {availableWords.length > 0 && (
-                        <div style={{ marginTop: '15px', fontSize: '0.9em', color: '#888' }}>
-                          <strong>Palabras disponibles para reconocer:</strong>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '5px' }}>
-                            {availableWords.map((word, index) => (
-                              <span key={index} style={{ 
-                                background: '#f0f0f0', 
-                                padding: '2px 6px', 
-                                borderRadius: '3px',
-                                fontSize: '0.8em'
-                              }}>
-                                {word}
-                              </span>
-                            ))}
-                          </div>
+                      {isRealTimeActive ? (
+                        <div className="realtime-results">
+                          <h3>Reconocimiento en Tiempo Real</h3>
+                          
+                          {realTimeWords.length > 0 && (
+                            <div className="realtime-words">
+                              <h4>Palabras Reconocidas:</h4>
+                              <div className="words-list">
+                                {realTimeWords.map((word, index) => (
+                                  <span key={index} className="word-tag realtime">
+                                    {word.word} ({(word.confidence * 100).toFixed(1)}%)
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          {realTimeSentence && (
+                            <div className="realtime-sentence">
+                              <h4>Oración Formada:</h4>
+                              <p className="sentence-text">{realTimeSentence}</p>
+                            </div>
+                          )}
+                          
+                          {realTimeWords.length === 0 && !realTimeSentence && (
+                            <p className="placeholder-text">
+                              Realiza señas frente a la cámara para reconocimiento en tiempo real...
+                            </p>
+                          )}
+                        </div>
+                      ) : transcribedText ? (
+                        <div>
+                          <p>{transcribedText}</p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="placeholder-text">
+                            El texto transcrito aparecerá aquí cuando el video sea procesado.
+                          </p>
+                          {availableWords.length > 0 && (
+                            <div style={{ marginTop: '15px', fontSize: '0.9em', color: '#888' }}>
+                              <strong>Palabras disponibles para reconocer:</strong>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '5px' }}>
+                                {availableWords.map((word, index) => (
+                                  <span key={index} style={{ 
+                                    background: '#f0f0f0', 
+                                    padding: '2px 6px', 
+                                    borderRadius: '3px',
+                                    fontSize: '0.8em'
+                                  }}>
+                                    {word}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
